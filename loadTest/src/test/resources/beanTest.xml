@@ -1,0 +1,26 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-4.2.xsd">
+	
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+    	<property name="locations" value="classpath:/testconfig/configTest.properties"/>
+	</bean>
+	
+	<bean id ="propertyUtils" class="com.fedorenko.onseo.util.propertiesreader.PropertyUtils" init-method="getConfiguration">
+		<property name="pathToConfig" value="src/test/resources/testconfig/configTest.properties"/>
+	</bean>
+
+    <bean id="simpleHttpRequest" class="com.fedorenko.onseo.scenario.SimpleHttpRequestScenario">
+		<property name="httpServiceUrl" value="${url}"/>
+	</bean>
+	
+	<bean id="requestPerSecondReport" class="com.fedorenko.onseo.report.RequestPerSecondReport"/>
+
+	<bean id="simpleSendHttpRequestHandler" class="com.fedorenko.onseo.scenariohandler.SimpleSendHttpRequestHandler">
+    	<property name="requestPerSecond" value="#{T(java.lang.Integer).parseInt('${requestPerSeconds}')}"/>
+		<property name="report" ref="requestPerSecondReport"/>
+		<constructor-arg ref="simpleHttpRequest"/>
+	</bean>
+		
+</beans>
